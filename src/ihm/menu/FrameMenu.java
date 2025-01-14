@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import constants.AppConstants;
-import controleur.Controleur;
+import ihm.IhmEchiquier;
 
 /**
  * Classe représentant la fenêtre du menu de l'application.
@@ -23,16 +23,16 @@ public class FrameMenu extends JFrame
     /**
      * Constructeur de la fenêtre du menu.
      * 
-     * @param ctrl Le contrôleur principal de l'application.
+     * @param ihm le gestionnaire des fenêtres
      */
-    public FrameMenu(Controleur ctrl)
+    public FrameMenu(IhmEchiquier ihm)
     {
         this.setTitle("Echec");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
 
         // Création et ajout du panneau de menu.
-        this.panelMenu = new PanelMenu(ctrl);
+        this.panelMenu = new PanelMenu(ihm);
         this.add(this.panelMenu);
 
         // Définition des dimensions.

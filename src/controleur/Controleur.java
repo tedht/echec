@@ -16,9 +16,7 @@ import metier.piece.Piece;
  */
 public class Controleur 
 {
-    // Modèle (metier) et Vue (ihm)
-    private Echiquier    metier;  // Gestion de la logique du jeu
-    private IhmEchiquier ihm;     // Gestion de l'interface utilisateur
+    private Echiquier metier; 
 
     /**
      * Constructeur qui initialise le modèle (Echiquier) et la vue (IhmEchiquier).
@@ -26,13 +24,12 @@ public class Controleur
      */
     public Controleur()
     {
-        this.metier = new Echiquier(this);  
-        this.ihm    = new IhmEchiquier(this);
-    }
+		// Métier
+        this.metier = new Echiquier(this);
 
-    /* ======================== */
-    /* Méthodes liées au Modèle */
-    /* ======================== */
+		// IHM
+        new IhmEchiquier(this);
+    }
 
     /**
      * Récupère la couleur du joueur actif.
@@ -135,66 +132,6 @@ public class Controleur
     public void validerConnexionClient(String serveur, int port) 
     { 
         this.metier.validerConnexionClient(serveur, port); 
-    }
-
-    /* *********************** */
-    /* Méthodes liées à la Vue */
-    /* *********************** */
-
-    /**
-     * Démarre le jeu (affichage de l'echiquier) via l'interface utilisateur.
-     */
-    public void jouer() 
-    { 
-        this.ihm.jouer(); 
-    }
-
-    /**
-     * Quitte l'application via l'interface utilisateur
-     */
-    public void quitter() 
-    { 
-        this.ihm.quitter(); 
-    }
-
-    /**
-     * Attend qu'un client se connecte via l'interface utilisateur.
-     */
-    public void attendreClient() 
-    { 
-        this.ihm.attendreClient(); 
-    }
-
-    /**
-     * Attend qu'un serveur soit disponible via l'interface utilisateur.
-     */
-    public void attendreServeur() 
-    { 
-        this.ihm.attendreServeur(); 
-    }
-
-    /**
-     * Lance la partie via l'interface utilisateur.
-     */
-    public void lancerJeu() 
-    { 
-        this.ihm.lancerJeu(); 
-    }
-
-    /**
-     * Affiche un message indiquant que la connexion a été refusée.
-     */
-    public void connexionRefusee() 
-    { 
-        this.ihm.connexionRefusee(); 
-    }
-
-    /**
-     * Affiche la fin de la partie via l'interface utilisateur.
-     */
-    public void afficherFinJeu() 
-    { 
-        this.ihm.afficherFinJeu(); 
     }
 
     /* ======================== */

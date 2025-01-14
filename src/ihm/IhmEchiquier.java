@@ -1,14 +1,11 @@
 package ihm;
 
-import java.awt.event.*;
-
-import javax.swing.JOptionPane;
-
 import controleur.Controleur;
-
 import ihm.connexion.FrameConnexion;
 import ihm.joueur.FrameJoueur;
 import ihm.menu.FrameMenu;
+import java.awt.event.*;
+import javax.swing.JOptionPane;
 
 /**
  * Classe représentant l'interface graphique du jeu d'échecs (IHM).
@@ -40,7 +37,7 @@ public class IhmEchiquier
 		this.ctrl = ctrl;
 		
 		// Initialisation du menu principal
-		this.frameMenu = new FrameMenu(ctrl);
+		this.frameMenu = new FrameMenu(this);
 	}
 
     /**
@@ -70,25 +67,9 @@ public class IhmEchiquier
 	}
 	
     /**
-     * Ferme toutes les fenêtres de l'application et termine le programme.
+     * Quitte l'application
      */
-	public void quitter() 
-	{ 
-		// Ferme le menu principal s'il est ouvert
-		if(this.frameMenu != null)
-			this.frameMenu.dispose();
-
-		// Ferme la fenêtre de connexion s'il est ouvert
-		if(this.frameConnexion != null)
-			this.frameConnexion.dispose();
-
-		// Ferme la fenêtre de jeu s'il est ouvert
-		if(this.frameJoueur!= null)
-			this.frameJoueur.dispose();
-
-        // Quitte l'application
-		System.exit(0);
-	}
+	public void quitter() { System.exit(0); }
 
     /**
      * Affiche "attente du client" dans la fenêtre de connexion.

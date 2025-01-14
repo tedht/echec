@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import controleur.Controleur;
+import ihm.IhmEchiquier;
 
 /**
  * Classe JPanel qui contient les composents de la fenêtre du menu de l'application.
@@ -18,7 +18,7 @@ import controleur.Controleur;
  */
 public class PanelMenu extends JPanel implements ActionListener
 {
-	private Controleur ctrl;
+	private IhmEchiquier ihm;
 
 	private JButton btnMultijoueur, btnQuitter;
 
@@ -26,11 +26,11 @@ public class PanelMenu extends JPanel implements ActionListener
 	 * Constructeur de la classe PanelMenu.
 	 * Initialise le panneau avec deux boutons : "Multijoueur" et "Quitter".
 	 *
-	 * @param ctrl le contrôleur
+	 * @param ihm le gestionnaire des fenêtres
 	 */
-	public PanelMenu(Controleur ctrl)
+	public PanelMenu(IhmEchiquier ihm)
 	{
-		this.ctrl = ctrl;
+		this.ihm = ihm;
 
 		this.setLayout(new GridLayout(2, 1, 20,20));
 		this.setBorder(new EmptyBorder(30,30,100,30));
@@ -60,12 +60,12 @@ public class PanelMenu extends JPanel implements ActionListener
 		
 		if(e.getSource() == this.btnMultijoueur)
 		{
-			this.ctrl.jouer();
+			this.ihm.jouer();
 		}
 
 		if(e.getSource() == this.btnQuitter)
 		{
-			this.ctrl.quitter();
+			this.ihm.quitter();
 		}
 	}
 }
