@@ -163,7 +163,6 @@ public class Echiquier
 		else if(this.estFinJeu())
 		{
 			// Fin de la partie
-			System.out.println("fin jeu");
 			this.ctrl.afficherFinJeu();
 		}
 		
@@ -174,8 +173,6 @@ public class Echiquier
 	 */
 	public void handleMousePressed(int x, int y)
 	{
-		System.out.println(x+" "+y);
-
 		// Inversion des coordonnées si le joueur est Noir
 		if(this.joueur == Couleur.NOIR)
 		{
