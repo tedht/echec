@@ -25,7 +25,7 @@ public class Controleur
     public Controleur()
     {
 		// Métier
-        this.metier = new Echiquier(this);
+        this.metier = new Echiquier();
 
 		// IHM
         new IhmEchiquier(this);
@@ -121,7 +121,7 @@ public class Controleur
      */
     public void validerConnexionServeur(int port) 
     { 
-        this.metier.validerConnexionServeur(port); 
+         this.metier.validerConnexionServeur(port); 
     }
 
     /**
@@ -133,6 +133,26 @@ public class Controleur
     { 
         this.metier.validerConnexionClient(serveur, port); 
     }
+
+	/**
+	 * Vérifie si la connexion est en cours.
+	 * 
+	 * @return true si la connexion est en cours, false sinon.
+	 */
+	public boolean getConnexionEnCours()
+	{
+		return this.metier.getConnexionEnCours();
+	}
+	
+	/**
+	 * Vérifie si la connexion a réussi.
+	 * 
+	 * @return true si la connexion a réussi, false sinon.
+	 */
+	public boolean getConnexionReussie()
+	{
+		return this.metier.getConnexionReussie();
+	}
 
     /* ======================== */
     /* Point d'entrée principal */

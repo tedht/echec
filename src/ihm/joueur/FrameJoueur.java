@@ -1,13 +1,12 @@
 package ihm.joueur;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-
 import constants.AppConstants;
 import controleur.Controleur;
+import ihm.IhmEchiquier;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  * Classe représentant la fenêtre dédiée à un joueur dans le jeu.
@@ -24,15 +23,16 @@ public class FrameJoueur extends JFrame
      * Constructeur de la fenêtre joueur.
      * 
      * @param ctrl Le contrôleur principal de l'application.
+	 * @param ihm  Le gestionnaire de l'ihm
      */
-    public FrameJoueur(Controleur ctrl)
+    public FrameJoueur(Controleur ctrl, IhmEchiquier ihm)
     {
         this.setTitle("Echec " + (ctrl.getJoueur().toString()));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
 
         // Initialisation et ajout du panneau dédié au joueur.
-        this.panelJoueur = new PanelJoueur(ctrl);
+        this.panelJoueur = new PanelJoueur(ctrl, ihm);
         this.add(this.panelJoueur);
 
         this.panelJoueur.startGameThread(); // Démmarrage du Thread de jeu

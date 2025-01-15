@@ -49,7 +49,7 @@ public class IhmEchiquier
 		if(this.frameConnexion == null)
 		{
 			// Crée une nouvelle fenêtre de connexion
-			this.frameConnexion = new FrameConnexion(this.ctrl, this.frameMenu);
+			this.frameConnexion = new FrameConnexion(this.ctrl, this, this.frameMenu);
 
             // Ajoute un écouteur pour fermer la fenêtre de connexion correctement
 			this.frameConnexion.addWindowListener(new WindowAdapter() {
@@ -89,21 +89,13 @@ public class IhmEchiquier
      */
 	public void lancerJeu() 
 	{ 
-		// Affiche que la connexion a réussi
-		this.frameConnexion.connexionReussie();
-
         // Ferme la fenêtre de connexion et de menu
 		this.frameConnexion.dispose();
 		this.frameMenu.dispose();
 
         // Ouvre la fenêtre du jeu
-		this.frameJoueur = new FrameJoueur(ctrl);
+		this.frameJoueur = new FrameJoueur(ctrl, this);
 	}
-
-    /**
-     * Affiche un message de connexion refusée dans la fenêtre de connexion.
-     */
-	public void connexionRefusee() { this.frameConnexion.connexionRefusee(); }
 
     /**
      * Affiche un message à la fin du jeu, indiquant si le joueur a gagné ou perdu.

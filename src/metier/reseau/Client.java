@@ -1,13 +1,12 @@
 package metier.reseau;
 
+import constants.Couleur;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-
-import constants.Couleur;
 import metier.Echiquier;
 
 /**
@@ -60,11 +59,13 @@ public class Client implements Runnable
         {
             // Connexion au serveur
             this.toServer = new Socket(this.serveur, this.port);
+			
+			this.echiquier.setConnexionEnCours(false);
+			this.echiquier.setConnexionReussie(true);
             System.out.println("Connexion réussie !");
 
             // Initialisation du joueur avec la couleur NOIR et lancement du jeu
             this.echiquier.setJoueur(Couleur.NOIR);
-            this.echiquier.lancerJeu();
 
             // Initialisation des flux d'entrée et de sortie pour la communication
             this.in  = new BufferedReader(new InputStreamReader(this.toServer.getInputStream()));
@@ -92,9 +93,8 @@ public class Client implements Runnable
         catch (IOException e)          
         { 
             e.printStackTrace(); 
-            // Afficher que la connexion a échouée
-            this.echiquier.connexionRefusee();
         } 
+		this.echiquier.setConnexionEnCours(false);
     }
 
     /**

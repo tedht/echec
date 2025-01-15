@@ -1,8 +1,8 @@
 package ihm.connexion;
 
-import javax.swing.*;
-
 import controleur.Controleur;
+import ihm.IhmEchiquier;
+import javax.swing.*;
 
 /**
  * Classe représentant la fenêtre de connexion de l'interface graphique.
@@ -19,17 +19,18 @@ public class FrameConnexion extends JFrame
      * Constructeur de la fenêtre de connexion.
      * 
      * @param ctrl       Le contrôleur principal de l'application.
+	 * @param ihm        Le gestionnaire de l'ihm
      * @param frameMenu  La fenêtre du menu utilisée pour positionner la 
 	 *                   fenêtre de connexion au centre par rapport à celle-ci.
      */
-    public FrameConnexion(Controleur ctrl, JFrame frameMenu)
+    public FrameConnexion(Controleur ctrl, IhmEchiquier ihm, JFrame frameMenu)
     {
 		this.setTitle("Connexion");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
 
         // Création et ajout du panneau de connexion.
-        this.panelConnexion = new PanelConnexion(ctrl);
+        this.panelConnexion = new PanelConnexion(ctrl, ihm);
         this.add(this.panelConnexion);
 
         this.pack();
@@ -59,21 +60,5 @@ public class FrameConnexion extends JFrame
     public void attendreServeur() 
     { 
         this.panelConnexion.attendreServeur(); 
-    }
-
-	/**
-     * Affiche "Connexion réussie.".
-     */
-    public void connexionReussie() 
-    { 
-        this.panelConnexion.connexionReussie(); 
-    }
-
-    /**
-     * Affiche "Connexion refusée.".
-     */
-    public void connexionRefusee() 
-    { 
-        this.panelConnexion.connexionRefusee(); 
     }
 }

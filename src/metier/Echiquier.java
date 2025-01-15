@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import constants.AppConstants;
 import constants.Couleur;
-import controleur.Controleur;
 import metier.piece.Piece;
 import metier.piece.Pion;
 import metier.piece.Tour;
@@ -24,10 +23,12 @@ import metier.piece.Roi;
  */
 public class Echiquier
 {
-	private Controleur ctrl;
 	private Serveur    serveur;
 	private Client     client;
 	private Thread     connexionThread;
+
+	private boolean    connexionEnCours;
+	private boolean    connexionReussie;
 
 	private Piece[][]  tabPieces;
 	private Piece      pieceSelectionnee;
@@ -50,12 +51,9 @@ public class Echiquier
 
 	/**
      * Constructeur de la classe Echiquier.
-     * 
-     * @param ctrl Le contrôleur
      */
-	public Echiquier(Controleur ctrl)
+	public Echiquier()
 	{
-		this.ctrl      = ctrl;
 		this.tabPieces = new Piece[8][8];
 
 		this.tabPiecesCapturees = new HashMap<Couleur, ArrayList<Piece>>();
@@ -71,6 +69,9 @@ public class Echiquier
      */
 	public void init()
 	{
+		this.connexionEnCours = false;
+		this.connexionReussie = false;
+		
 		// Initialise l'échiquier avec la disposition de départ des pièces.
 		for(int i = 0 ; i < initEchec.length ; i++ )
 		{
@@ -115,12 +116,16 @@ public class Echiquier
 	public Couleur getJoueurActif       () { return this.joueurActif;        }
 	public Couleur getJoueur            () { return this.joueur;             }
 	public int     getNumTour           () { return this.numTour;            }
+	public boolean getConnexionEnCours  () { return this.connexionEnCours;   }
+	public boolean getConnexionReussie  () { return this.connexionReussie;   }
 
 	// Setters
 	public void setPieceSelectionnee (Piece   piece)   { this.pieceSelectionnee  = piece;   }
 	public void setPieceEnDeplacement(Piece   piece)   { this.pieceEnDeplacement = piece;   }
 	public void setJoueurActif       (Couleur couleur) { this.joueurActif        = couleur; }
 	public void setJoueur            (Couleur couleur) { this.joueur             = couleur; }
+	public void setConnexionEnCours  (boolean b)       { this.connexionEnCours = b;         }
+	public void setConnexionReussie  (boolean b)       { this.connexionReussie = b;         }
 
 	/**
      * Met à jour l'état de l'échiquier à chaque frame (animation des déplacements, fin de jeu, etc.).
@@ -160,12 +165,6 @@ public class Echiquier
 			this.tabPieces[lig][col] = new Reine(this, num, lig, col);
 			this.pionAPromouvoir = null;
 		}
-		else if(this.estFinJeu())
-		{
-			// Fin de la partie
-			this.ctrl.afficherFinJeu();
-		}
-		
 	}
 
 	/**
@@ -214,8 +213,10 @@ public class Echiquier
 	 */
 	public void validerConnexionServeur(int port) 
 	{
-		this.ctrl.attendreClient();
-		this.serveur         = new Serveur(this, port);
+		this.connexionEnCours = true;
+		this.connexionReussie = false;
+		this.serveur = new Serveur(this, port);
+
 		this.connexionThread = new Thread (this.serveur);
 		this.connexionThread.start();
 	}
@@ -223,10 +224,13 @@ public class Echiquier
 	/**
 	 * Connexion au serveur en mode client
 	 */
-	public void validerConnexionClient (String serveur, int port) 
+	public void validerConnexionClient(String serveur, int port) 
 	{
-		this.ctrl.attendreServeur();
-		this.client          = new Client(this, serveur, port);
+		this.connexionEnCours = true;
+		this.connexionReussie = false;
+		
+		this.client = new Client(this, serveur, port);
+
 		this.connexionThread = new Thread(this.client);
 		this.connexionThread.start();
 	}
@@ -312,22 +316,15 @@ public class Echiquier
 	/**
 	 * Démarrer le jeu
 	 */
-	public void lancerJeu() { this.ctrl.lancerJeu(); }
-
-	/**
-	 * Notifier le contrôleur que la connexion a été refusée
-	 */
-	public void connexionRefusee() { this.ctrl.connexionRefusee(); }
+	public void lancerJeu() {  }
 
 	/**
 	 * Gérer la promotion d'un pion
-	 * @param pion
+	 * @param pion Le pion à promouvoir
+	 * 
 	 */
-	public void promotion(Pion pion) 
+	public void promotion(Pion pion)
 	{
-		// Stocker le pion à promouvoir (Promotion effectuée dans la méthode 
-		// update après avoir teminé l'animation de déplacement)
 		this.pionAPromouvoir = pion;
 	}
-
 }

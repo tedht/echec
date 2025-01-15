@@ -1,5 +1,7 @@
 package ihm.connexion;
 
+import controleur.Controleur;
+import ihm.IhmEchiquier;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -8,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,8 +18,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-
-import controleur.Controleur;
 
 /**
  * Classe JPanel qui contient les composents de la fenêtre de connexion de l'application.
@@ -42,7 +41,8 @@ public class PanelConnexion extends JPanel implements ActionListener, ItemListen
 		public int getInd() { return this.ind; }
     }
 	
-	private Controleur ctrl;
+	private Controleur   ctrl;
+	private IhmEchiquier ihm;
 
 	private boolean connexionEnCours;
 
@@ -61,10 +61,12 @@ public class PanelConnexion extends JPanel implements ActionListener, ItemListen
      * Constructeur de PanelConnexion.
      * 
      * @param ctrl le contrôleur
+	 * @param ihm  le gestionnaire de l'ihm
      */
-	public PanelConnexion(Controleur ctrl)
+	public PanelConnexion(Controleur ctrl, IhmEchiquier ihm)
 	{
 		this.ctrl = ctrl;
+		this.ihm  = ihm;
 
 		this.connexionEnCours = false;
 
@@ -138,7 +140,7 @@ public class PanelConnexion extends JPanel implements ActionListener, ItemListen
 		/* Activation des composants */
 		/*---------------------------*/
 		for (JRadioButton rb : this.tabRbType)
-			rb.addItemListener ( this );
+			rb.addItemListener (this);
 
 		this.btnAnnuler.addActionListener(this);
 		this.btnValider.addActionListener(this);
@@ -164,12 +166,60 @@ public class PanelConnexion extends JPanel implements ActionListener, ItemListen
 		{
 			if(this.tabRbType[TypeConn.SERVEUR.getInd()].isSelected())
 			{
-				this.ctrl.validerConnexionServeur(Integer.parseInt(this.txtPort.getText()));
+				this.attendreClient();
+
+				new Thread(() -> {
+					this.ctrl.validerConnexionServeur(Integer.parseInt(this.txtPort.getText()));
+					while (this.ctrl.getConnexionEnCours()) 
+					{
+						try 
+						{
+							Thread.sleep(100);
+						}
+						catch (InterruptedException ex) {}
+					}
+					
+					SwingUtilities.invokeLater(() -> {
+						if (this.ctrl.getConnexionReussie()) 
+						{
+							connexionReussie();
+							this.ihm.lancerJeu();
+						} 
+						else 
+						{
+							connexionRefusee();
+						}
+					});
+				}).start();
 			}
 
 			if(this.tabRbType[TypeConn.CLIENT .getInd()].isSelected())
 			{
-				this.ctrl.validerConnexionClient(this.txtServeur.getText(), Integer.parseInt(this.txtPort.getText()));
+				this.attendreServeur();
+				
+				new Thread(() -> {
+					this.ctrl.validerConnexionClient(this.txtServeur.getText(), Integer.parseInt(this.txtPort.getText()));
+					while (this.ctrl.getConnexionEnCours()) 
+					{
+						try 
+						{
+							Thread.sleep(100); 
+						} 
+						catch (InterruptedException ex) {}
+					}
+					
+					SwingUtilities.invokeLater(() -> {
+						if (this.ctrl.getConnexionReussie()) 
+						{
+							this.connexionReussie();
+							this.ihm.lancerJeu();
+						} 
+						else 
+						{
+							this.connexionRefusee();
+						}
+					});
+				}).start();
 			}
 		}
 
@@ -205,8 +255,6 @@ public class PanelConnexion extends JPanel implements ActionListener, ItemListen
 	public void attendreClient() 
 	{ 
 		this.setConnexionEnCours(true, "Attente d'un joueur...");
-		this.revalidate();
-		this.repaint();
 	}
 
 	/**
@@ -216,8 +264,6 @@ public class PanelConnexion extends JPanel implements ActionListener, ItemListen
 	public void attendreServeur() 
 	{ 
 		this.setConnexionEnCours(true, "Connexion au serveur...");
-		this.revalidate();
-		this.repaint();
 	} 
 
 	 /**
@@ -235,14 +281,14 @@ public class PanelConnexion extends JPanel implements ActionListener, ItemListen
 		else 
 			this.panelActionBtn.add(this.btnValider);
 
-		this.lblType   .setEnabled(!b);
+		this.lblType.setEnabled(!b);
 		for(JRadioButton rb : this.tabRbType)
 			rb.setEnabled(!b);
 
-		this.lblPort   .setEnabled(!b);
-		this.txtPort   .setEditable(!b);
+		this.lblPort.setEnabled (!b);
+		this.txtPort.setEditable(!b);
 
-		this.lblServeur.setEnabled(!b);
+		this.lblServeur.setEnabled (!b);
 		this.txtServeur.setEditable(!b);
 		this.revalidate();
 		this.repaint();

@@ -8,7 +8,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-
 import metier.Echiquier;
 
 /**
@@ -60,11 +59,12 @@ public class Serveur implements Runnable
             // Création du socket serveur et attente de la connexion du client
             this.serverSocket = new ServerSocket(port);
             this.toClient = this.serverSocket.accept();
+
+			this.echiquier.setConnexionEnCours(false);
+			this.echiquier.setConnexionReussie(true);
             System.out.println("Client connecté : " + this.toClient.getInetAddress());
 
 			// Par défaut, le joueur est initialisé avec la couleur BLANC
-            // Lancement du jeu après la connexion du client
-            this.echiquier.lancerJeu();
 
             // Initialisation des flux d'entrée et de sortie pour la communication
             this.in  = new BufferedReader(new InputStreamReader(this.toClient.getInputStream()));
@@ -93,6 +93,7 @@ public class Serveur implements Runnable
         catch (IOException e)          { 
             e.printStackTrace(); // Erreur d'entrée/sortie
         }
+		this.echiquier.setConnexionEnCours(false);
     }
 
     /**

@@ -1,10 +1,9 @@
 package ihm.joueur;
 
-import javax.swing.JPanel;
-
 import constants.AppConstants;
 import constants.Couleur;
-
+import controleur.Controleur;
+import ihm.IhmEchiquier;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -13,8 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import controleur.Controleur;
+import javax.swing.JPanel;
 import metier.piece.Piece;
 
 /**
@@ -29,7 +27,8 @@ import metier.piece.Piece;
  */
 public class PanelJoueur extends JPanel implements Runnable
 {
-	private Controleur ctrl;
+	private Controleur   ctrl;
+	private IhmEchiquier ihm;
 
 	private Thread gameThread;
 
@@ -42,10 +41,12 @@ public class PanelJoueur extends JPanel implements Runnable
      * Constructeur de PanelJoueur.
      * 
      * @param ctrl le contrôleur
+	 * @param ihm  le gestionnaire de l'ihm
      */
-	public PanelJoueur(Controleur ctrl)
+	public PanelJoueur(Controleur ctrl, IhmEchiquier ihm)
 	{
 		this.ctrl = ctrl;
+		this.ihm  = ihm;
 
 		this.imgFond = this.imgEchiquier = this.imgPieces = null;
 
@@ -85,7 +86,7 @@ public class PanelJoueur extends JPanel implements Runnable
 		long lastTime = System.nanoTime();
 		long currentTime;
 
-		while(gameThread != null)
+		while(!this.ctrl.estFinJeu())
 		{
 
 			currentTime = System.nanoTime();
@@ -100,6 +101,8 @@ public class PanelJoueur extends JPanel implements Runnable
 				deltaTime--;
 			}
 		}
+
+		this.ihm.afficherFinJeu();
 	}
 
 	/**
